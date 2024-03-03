@@ -9,11 +9,30 @@ the neural net is in microgradc++.cpp
 
 you'll have to modify the CMakeLists.txt's (both of them) to get to the needed header files/libraries for armadillo and graphviz
 
-### Some example results
+### Tracing / visualization
 
+```cpp
+auto n = Neuron(2);
+vector<Value> x{ Value(1.0), Value(-2.0) };
+auto y = n(x);
+y.backward();
+draw_dot(y.data.get(), "svg", "LR", "dot2.svg");
+```
 
 ![a very simple example](dot1.svg)
+
+```cpp
+auto n = Neuron(2);
+vector<Value> x{ Value(1.0), Value(-2.0) };
+auto y = n(x);
+y.backward();
+draw_dot(y.data.get(), "svg", "LR", "dot2.svg");
+```
+
 ![a simple 2D neuron](dot2.svg)
+
+### Training a neural net, some sample results
+
 ![microgradc++/data.txt](data_boundary.svg)
 ![make_moon1](sample1_boundary.svg)
 ![make_moon2](sample2_boundary.svg)
