@@ -13,15 +13,8 @@ you'll have to modify the CMakeLists.txt's (both of them) to get to the needed h
 
 
 ![a very simple example](dot1.svg)
-
-
-
 ![a simple 2D neuron](dot2.svg)
-
 ![microgradc++/data.txt](data_boundary.svg)
-
 ![make_moon1](sample1_boundary.svg)
-
 ![make_moon2](sample2_boundary.svg)
-
-![make_moon3](sample3_boundary.svg
+![make_moon3](sample3_boundary.svg)
