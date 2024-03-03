@@ -3,7 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-link_directories(C:/Users/Sieme/source/repos/Graphviz-10.0.1/lib)
+link_directories(<your path>/Graphviz-10.0.1/lib)
 
 # Add source to this project's executable.
 add_executable (microgradc++ "microgradc++.cpp" "microgradc++.hpp" "engine.hpp" "sklearn.hpp" "tests.hpp")
