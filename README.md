@@ -30,7 +30,13 @@ draw_dot(y.data.get(), "svg", "LR", "dot2.svg");
 
 ![a simple 2D neuron](dot2.svg)
 
-### Training a neural net, some sample results
+### Training a neural net, sample results
+
+```cpp
+vector<int> layers{ 16, 16, 1 };
+// 2 - layer neural network
+auto model = MLP(2, layers);
+```
 
 ![microgradc++/data.txt](data_boundary.svg)
 ![make_moon1](sample1_boundary.svg)
