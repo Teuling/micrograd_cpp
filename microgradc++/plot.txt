@@ -1,0 +1,13 @@
+set view map
+set pm3d map
+set term svg
+set output 'boundary.svg'
+set palette rgbformulae 33,13,10
+set palette defined (0 '#FF0000', 1 '#0000FF');
+set palette defined (0 "blue", 1 "red")
+set pm3d interpolate 0,3
+set xrange [-2.027613:2.140887]
+set yrange [-1.663691:1.201476]
+splot 'data.dat' with pm3d linecolor palette title '', \
+      'data.txt' using 1:2:3 with points palette pointsize 1 pointtype 7 title ''
+set output
