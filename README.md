@@ -20,7 +20,7 @@ you'll have to modify the CMakeLists.txt's (both of them) to get to the needed h
 
 ![microgradc++/data.txt](data_boundary.svg)
 
-![make_moon1(sample1_boundary.svg)
+![make_moon1](sample1_boundary.svg)
 
 ![make_moon2](sample2_boundary.svg)
 
