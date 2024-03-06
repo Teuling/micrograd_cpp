@@ -8,7 +8,6 @@
 #include "sklearn.hpp"
 #include "tests.hpp"
 
-#include <armadillo>
 #include <iostream>
 #include <vector>
 #include <cassert>
@@ -16,9 +15,6 @@
 #include <numeric>
 #include <iomanip>
 #include <set>
-#define GVDLL
-#include <graphviz/gvc.h>
-#include <graphviz/cgraph.h>
 
 using namespace std;
 
@@ -95,18 +91,17 @@ pair<Value, Value> loss() {
 	}
 	return { total_loss , sum_ack / accuracy.size() };
 }
-// when set to false then make sure to rebuild completely
-// cmake  needs to copy data.txt from to the build dir
-#define GENERATE_DATA true
+
+#define GENERATE_DATA false
 
 void testNN() {
 #if GENERATE_DATA
 	string filename{ "data.txt" };
 	make_moons(100, noise, X, y);
-	write_data_to_file(X, y, filename);
 	for (auto& y_ : y) {
 		y_ = y_ * 2 - 1;
 	}
+	write_data_to_file(X, y, filename);
 #else
 	auto testdata = readDataFromFile("data.txt");
 	X = std::get<0>(testdata);

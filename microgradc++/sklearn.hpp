@@ -5,12 +5,13 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <armadillo>
 #include <random>
 #include <string>
-#define GVDLL
+#include <cstdlib>
+
 #include <graphviz/gvc.h>
 #include <graphviz/cgraph.h>
+#include <cstdio>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -121,7 +122,7 @@ tuple<set<Data*>, set<tuple<Data*, Data*>>> trace(Data* root) {
 	return { nodes, edges };
 }
 
-Agraph_t* draw_dot(Data* root, string format = "svg", string rankdir = "LR", string filename="dot.svg") {
+Agraph_t* dot(Data* root, string format = "svg", string rankdir = "LR", string filename="dot.svg") {
 	//format: png | svg | ...
 	//rankdir : TB(top to bottom graph) | LR(left to right)
 
@@ -129,24 +130,31 @@ Agraph_t* draw_dot(Data* root, string format = "svg", string rankdir = "LR", str
 	GVC_t* gvc = gvContext();
 
 	// Create a new directed graph
-	auto g = agopen("G", Agdirected, NULL);
-	agsafeset(g, "rankdir", rankdir.c_str(), "");
+	char name[2]={'G','\0'};
+	auto g = agopen(name, Agdirected, NULL);
+	char* buffer = new char[rankdir.length() + 1];
+	strcpy(buffer, rankdir.c_str());
+	const char* namerank = "rankdir";
+	const char* def = "";
+	agsafeset(g, const_cast<char*>(namerank), buffer, const_cast<char*>(def));
 
 	set<Data*> nodes;
 	set<tuple<Data*, Data*>> edges;
-	map<int, Agnode_t*> anodes;
+	map<long, Agnode_t*> anodes;
 
 	std::tie(nodes, edges) = trace(root);
 
 	for (auto n : nodes) {
 		// some horrible c-api crap
 		char* name = new char[30];
-		itoa(reinterpret_cast<int>(n), name, 10);
+		long ptrValue = reinterpret_cast<long>(n);
+		snprintf(name, 30, "%ld", ptrValue);
 		auto node = agnode(g, name, 1);
-		anodes[(int)n] = node;
+		anodes[(long)n] = node;
 		char* lable = new char[30];
 		sprintf(lable, "<data> %f | <grad> %f", n->data, n->grad);
-		agset(node, "label", lable);
+		const char* label = "label";
+		agset(node, const_cast<char*>("label"), lable);
 		if (n->op != "") {
 			// make a unique name out of op
 			static int count = 0;
@@ -160,10 +168,11 @@ Agraph_t* draw_dot(Data* root, string format = "svg", string rankdir = "LR", str
 			count++;
 
 			auto node2 = agnode(g, name2, 1);
-			anodes[(int)n + (int)(&n->op)] = node2;
+			anodes[(long)n + (long)(n->op.c_str())] = node2;
 			char* lable2 = new char[30];
 			sprintf(lable2, "%s", n->op.c_str());
-			agset(node2, "label", lable2);
+			const char* label_ = "label";
+			agset(node2, const_cast<char*>(label_), lable2);
 			auto e = agedge(g, node2, node, NULL, 1);
 		}
 	}
@@ -171,7 +180,7 @@ Agraph_t* draw_dot(Data* root, string format = "svg", string rankdir = "LR", str
 	for (tuple<Data*, Data*> edge : edges) {
 		Data* n1 = get<0>(edge);
 		Data* n2 = get<1>(edge);
-		auto e = agedge(g, anodes[(int)n1], anodes[(int)n2 + (int)&n2->op], NULL, 1);
+		auto e = agedge(g, anodes[(long)n1], anodes[(long)n2 + (long)n2->op.c_str()], NULL, 1);
 	}
 
 	gvLayout(gvc, g, "dot");

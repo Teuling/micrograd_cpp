@@ -6,7 +6,7 @@ void testdot1() {
 	auto x = Value(1.0);
 	auto y = (x * 2 + 1).relu();
 	y.backward();
-	draw_dot(y.data.get(), "svg", "LR", "dot1.svg");
+	dot(y.data.get(), "svg", "LR", "dot1.svg");
 }
 
 void testdot2() {
@@ -16,7 +16,7 @@ void testdot2() {
 	vector<Value> x{ Value(1.0), Value(-2.0) };
 	auto y = n(x);
 	y.backward();
-	draw_dot(y.data.get(), "svg", "LR", "dot2.svg");
+	dot(y.data.get(), "svg", "LR", "dot2.svg");
 }
 
 void test1()

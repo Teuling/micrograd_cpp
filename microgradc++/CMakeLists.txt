@@ -3,12 +3,15 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-link_directories(<your path>/Graphviz-10.0.1/lib)
+set(CMAKE_BUILD_TYPE Debug)
+link_directories(</usr/lib/aarch64-linux-gnu)
+include_directories(SYSTEM "/usr/include/graphviz/")
 
 # Add source to this project's executable.
 add_executable (microgradc++ "microgradc++.cpp" "microgradc++.hpp" "engine.hpp" "sklearn.hpp" "tests.hpp")
 
-target_link_libraries(microgradc++ cgraph cdt gvc)
+target_link_libraries(microgradc++ cgraph cdt gvc ${GRAPHVIZ_LIBRARIES})
+target_compile_features(microgradc++ PUBLIC cxx_std_17)
 
 # Copy files to the build directory using add_custom_command
 add_custom_command(

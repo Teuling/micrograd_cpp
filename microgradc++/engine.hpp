@@ -8,6 +8,8 @@
 #include <type_traits>
 #include <cmath>
 #include <algorithm>
+#include <memory>
+#include <type_traits>
 
 using namespace std;
 
@@ -15,17 +17,17 @@ struct Data {
 	double data{ 0 };
 	double grad{ 0 };
 	std::function<void()> _backward;
-	set<std::shared_ptr<Data>> prev;
+	set<shared_ptr<Data>> prev;
 	string op;
 };
 
 struct Value {
-	std::shared_ptr<Data> data;
+	shared_ptr<Data> data;
 
 	Value() : Value(0) {
 	}
 
-	Value(double dat, vector<std::shared_ptr<Data>> children = {}, string op = "c") : 
+	Value(double dat, vector<shared_ptr<Data>> children = {}, string op = "c") : 
 		data(std::make_shared<Data>()) {
 		data->data = dat;
 		data->grad = 0;
@@ -35,9 +37,9 @@ struct Value {
 			data->prev.insert(child);
 		}
 	}
-	void build_topo(vector<std::shared_ptr<Data>> &topo, 
+	void build_topo(vector<shared_ptr<Data>> &topo, 
 					set<std::shared_ptr<Data>>&visited, 
-					std::shared_ptr<Data> v) {
+					shared_ptr<Data> v) {
 		if (visited.find(v) == visited.end()) {
 			visited.insert(v);
 			for (auto child : v->prev)
@@ -46,8 +48,8 @@ struct Value {
 		}
 	}
 	void backward() {
-		vector<std::shared_ptr<Data>> topo;
-		set<std::shared_ptr<Data>> visited;
+		vector<shared_ptr<Data>> topo;
+		set<shared_ptr<Data>> visited;
 		build_topo(topo, visited, this->data);
 		this->data->grad = 1.0;
 		for (auto v = topo.rbegin(); v != topo.rend(); ++v) {
@@ -97,7 +99,7 @@ struct Value {
 		return out;
 	}
 	template<typename U>
-	friend std::enable_if_t<!std::is_same_v<U, Value>, Value> operator+(U left, Value& right);
+	friend enable_if_t<!is_same<U, Value>::value, Value> operator+(U left, Value right);
 // *operator
 	Value operator*(Value other) {
 		Value out(data->data * other.data->data, { this->data, other.data }, "*");
@@ -118,7 +120,7 @@ struct Value {
 		return out;
 	}
 	template<typename U>
-	friend std::enable_if_t<!std::is_same_v<U, Value>, Value> operator*(U left, Value& right);
+	friend std::enable_if_t<!is_same<U, Value>::value, Value> operator*(U left, Value right);
 // ^operator
 	Value operator^(double other) {
 		Value out(pow(data->data, other), { data }, "^");
@@ -181,7 +183,7 @@ struct Value {
 		return *this + -(other_);
 	}
 	template<typename U>
-	friend std::enable_if_t<!std::is_same_v<U, Value>, Value> operator-(U left, Value& right);
+	friend std::enable_if_t<!is_same<U, Value>::value, Value> operator-(U left, Value right);
 // div
 	Value operator/(double other_) {
 		return *this * (pow(other_,-1));
@@ -190,22 +192,22 @@ struct Value {
 		return *this * (other_^-1);
 	}
 	template<typename U>
-	friend std::enable_if_t<!std::is_same_v<U, Value>, Value> operator/(U left, Value& right);
+	friend std::enable_if_t<!is_same<U, Value>::value, Value> operator/(U left, Value right);
 };
 template<typename U>
-std::enable_if_t<!std::is_same_v<U, Value>, Value> operator+(U left,  Value& right) {
+std::enable_if_t<!is_same<U, Value>::value, Value> operator+(U left,  Value right) {
 	return right+(left);
 }
 template<typename U>
-std::enable_if_t<!std::is_same_v<U, Value>, Value> operator*(U left, Value& right) {
+std::enable_if_t<!is_same<U, Value>::value, Value> operator*(U left, Value right) {
 	return right*(left);
 }
 template<typename U>
-std::enable_if_t<!std::is_same_v<U, Value>, Value> operator-(U left, Value& right) {
+std::enable_if_t<!is_same<U, Value>::value, Value> operator-(U left, Value right) {
 	return left + (-right);
 }
 template<typename U>
-std::enable_if_t<!std::is_same_v<U, Value>, Value> operator/(U left, Value& right) {
+std::enable_if_t<!is_same<U, Value>::value, Value> operator/(U left, Value right) {
 	return left * (right^-1);
 }
 
