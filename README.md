@@ -7,6 +7,16 @@ the neural net is in microgradc++.cpp
 
 ### Installation
 
+sudo apt install gnuplot
+sudo apt-get install graphviz libgraphviz-dev
+mkdir build
+cd build
+cmake ..
+make
+
+cd microgradc++
+./microgradc++
+
 you might have to modify CMakeLists.txt to get to the needed header files/libraries for graphviz
 
 ### Tracing / visualization

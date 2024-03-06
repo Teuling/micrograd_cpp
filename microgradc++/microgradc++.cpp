@@ -92,21 +92,13 @@ pair<Value, Value> loss() {
 	return { total_loss , sum_ack / accuracy.size() };
 }
 
-#define GENERATE_DATA false
-
 void testNN() {
-#if GENERATE_DATA
 	string filename{ "data.txt" };
 	make_moons(100, noise, X, y);
+	write_data_to_file(X, y, filename);
 	for (auto& y_ : y) {
 		y_ = y_ * 2 - 1;
 	}
-	write_data_to_file(X, y, filename);
-#else
-	auto testdata = readDataFromFile("data.txt");
-	X = std::get<0>(testdata);
-	y = std::get<1>(testdata);
-#endif
 
 	cout << model << endl;
 	cout << "number of parameters:" << model.parameters().size() << endl;

@@ -21,19 +21,11 @@ add_custom_command(
         ${CMAKE_CURRENT_BINARY_DIR}/plot.txt
     DEPENDS ${CMAKE_SOURCE_DIR}/microgradc++/plot.txt
 )
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/data.txt
-    COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}//microgradc++/data.txt
-        ${CMAKE_CURRENT_BINARY_DIR}/data.txt
-    DEPENDS ${CMAKE_SOURCE_DIR}/microgradc++/data.txt
-)
 
 # Create a custom target to ensure the file is copied during the build
 add_custom_target(
     CopyFiles
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/plot.txt
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/data.txt
 )
 
 # Add dependency on the custom target to ensure the file is copied before building
