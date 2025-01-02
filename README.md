@@ -2,7 +2,7 @@
 
 c++ version of the famous [micrograd](https://github.com/karpathy/micrograd) implementaton in python, by Andrej Karpathy
 
-the trace_graph and sanity tests can be found be found in tests.hpp
+the trace_graph and sanity tests can be in tests.hpp
 the neural net is in microgradc++.cpp 
 
 ### Installation
